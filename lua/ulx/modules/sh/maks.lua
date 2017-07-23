@@ -538,6 +538,8 @@ function ulx.size(calling_ply, target_plys, size)
     	local target = target_plys[ i ]
     	if IsValid(target) then
     		target:SetModelScale(size, 0)
+    		target:SetViewOffset(Vector(0,0,64*size))
+    		target:SetViewOffsetDucked(Vector(0,0,28*size))
   		end
 	end
 	ulx.fancyLogAdmin( calling_ply, false, "#A set size of #T to #s", target_plys, size)
@@ -721,3 +723,13 @@ ssay:defaultAccess( ULib.ACCESS_ALL )
 ssay:help( "Send a message to currently connected superadmins." )
 
 -- End of ideas from ULX Extended https://www.gmodstore.com/scripts/view/1509/ulx-extended
+
+-- Ideas from ULX Essentials https://www.gmodstore.com/scripts/view/1508/ulx-essentials
+
+function ulx.steamid(calling_ply, target_ply)
+	calling_ply:SendLua([[SetClipboardText("]]..string.Replace(ply:Nick(),[["]],[[\"]])..[[")]]) -- exploit protection
+end
+local steamid = ulx.command( CATEGORY_NAME, "ulx steamid", ulx.steamid, "!steamid", true)
+steamid:AddParam{ type=ULib.cmds.PlayerArg }
+steamid:defaultAccess( ULib.ACCESS_ADMIN )
+steamid:help( "Freeze all props" )
