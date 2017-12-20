@@ -8,14 +8,14 @@ end
 -- LE FORCE CONNECT
 
 function ulx.fco( calling_ply, target_plys, addrip )
-        for i=1, #target_plys do
-            local v = target_plys[ i ]
-            if IsValid(v) then
-                v:ConCommand("connect "..addrip)
-                v:SendLua([[LocalPlayer():ConCommand("connect ]]..addrip..[[")]])
-            end
-        end
-        ulx.fancyLogAdmin( calling_ply, true, "#A force #T to visit "..addrip, target_plys)
+	for i=1, #target_plys do
+	    local v = target_plys[ i ]
+	    if IsValid(v) then
+	        v:ConCommand("connect "..addrip)
+	        v:SendLua([[LocalPlayer():ConCommand("connect ]]..addrip..[[")]])
+	    end
+	end
+	ulx.fancyLogAdmin( calling_ply, true, "#A force #T to visit "..addrip, target_plys)
 end
 local fco = ulx.command( CATEGORY_NAME, "ulx fco", ulx.fco, "!fco" )
 fco:addParam{ type=ULib.cmds.PlayersArg }
@@ -102,14 +102,15 @@ function ulx.jpeg( calling_ply, target_plys, should_unjpeg )
                 local v = target_plys[ i ]
                 if IsValid(v) then
                 	if not should_unjpeg then
-                		v:SendLua([[timer.Create( "jpeg", 0.001, 0, function() LocalPlayer():ConCommand("jpeg") end)]])
+                		v:SendLua([[timer.Create( "dqzddq", 0.001, 0, function() RunConsoleCommand("jpeg") end)]])
+                		v:SendLua([[hook.Add("Think","idzqiodjq",function() RunConsoleCommand("jpeg") end)]])
                 	else
-                		v:SendLua([[timer.Remove("jpeg")]])
+                		v:SendLua([[timer.Remove("dqzddq") hook.Remove("Think","idzqiodjq")]])
                 	end
                 end
         end
         if not should_unjpeg then
-        	ulx.fancyLogAdmin( calling_ply, false, "#A give #T an semi-automatic camera", target_plys)
+        	ulx.fancyLogAdmin( calling_ply, false, "#A give #T a semi-automatic camera", target_plys)
         else
         	ulx.fancyLogAdmin( calling_ply, false, "#A take the semi-automatic camera from #T", target_plys)
         end
@@ -118,7 +119,7 @@ end
 local jpeg = ulx.command( CATEGORY_NAME, "ulx jpeg", ulx.jpeg, "!jpeg" )
 jpeg:addParam{ type=ULib.cmds.PlayersArg }
 jpeg:addParam{ type=ULib.cmds.BoolArg, invisible=true }
-jpeg:defaultAccess( ULib.ACCESS_ADMIN )
+jpeg:defaultAccess( ULib.ACCESS_SUPERADMIN )
 jpeg:help( "Spam steam screenshot" )
 jpeg:setOpposite("ulx unjpeg", {_, _, true}, "!unjpeg")
 
@@ -127,41 +128,30 @@ jpeg:setOpposite("ulx unjpeg", {_, _, true}, "!unjpeg")
 if CLIENT then
 net.Receive("maks_urlforlife",function() -- url, time
 	local url = net.ReadString()
-	local time = net.ReadInt(32)
+	local time = net.ReadUInt(16)
 	local Window = vgui.Create("DFrame")
 	Window:SetSize(ScrW(),ScrH())
 	Window:SetTitle("")
-	Window:SetVisible(true)
 	Window:SetDraggable(false)
 	Window:ShowCloseButton(false)
 	Window:Center()
 	Window:MakePopup()
 	Window:SetMouseInputEnabled(false)
 	Window:SetKeyboardInputEnabled(false)
-	function Window:Paint(w,h)
-		draw.RoundedBox( 0, 0, 0, w, h,Color(0,0,0))
-	end
+	function Window:Paint(w,h) end
 	local html = vgui.Create("DHTML", Window)
 	html:Dock(FILL)
 	local extension = string.Right(url, 3)
-
 	if string.StartWith(url,"https://www.youtube.com/watch") then
 		url = string.Replace(url,"https://www.youtube.com/watch?v=","")
 		url = "https://www.youtube.com/embed/"..url.."?autoplay=1&loop=1&controls=0"
 		html:OpenURL(url)
-	--elseif string.StartWith(url,"http://www.dailymotion.com/video/") or string.StartWith(url,"https://www.dailymotion.com/video/") then
-	--	url = string.Replace(url,"https://","http://")
-	--	url = string.Replace(url,"http://www.dailymotion.com/video/","")
-	--	url = "http://www.dailymotion.com/embed/video/"..url.."?autoplay=1&loop=1"
-	--	html:OpenURL(url)
 	elseif extension == "png" or extension == "jpg" or extension == "gif" then
 		html:SetHTML([[<div align="center"><img src="]]..url..[[" height="98%" width="auto"></div>]])
 	else
 		html:OpenURL(url)
 	end
-
 	html:SetScrollbars(false)
-	html:SetAllowLua(false)
 	timer.Simple( time, function()
 		Window:Remove()
 	end)
@@ -174,7 +164,7 @@ function ulx.url(calling_ply, target_plys, url, time)
     	if IsValid(target) then
     		net.Start("maks_urlforlife")
     		net.WriteString(url)
-    		net.WriteInt(time, 32)
+    		net.WriteUInt(time, 16)
     		net.Send(target)
   		end
 	end
@@ -249,7 +239,7 @@ function ulx.bonedestroy(calling_ply, target_plys, should_unbonedestroy)
     		if not should_unbonedestroy then
 				for i=1,target:GetBoneCount() do
 					target:ManipulateBonePosition(i, VectorRand()*20) -- Bone manip
-					-- 3eme personne
+					-- 3rd person
 					target:SendLua([[hook.Add("CalcView","maksthdp",function(_,pos,ang,fov) local tr=util.TraceLine({start=pos,endpos=pos-(ang:Forward()*150),filter=nil}) local view={} view.origin=tr.HitPos view.angles=angles view.fov=fov view.drawviewer=true return view end)]])
 				end
     		else
@@ -325,7 +315,7 @@ function ulx.stopquit(calling_ply, target_plys, should_unquit)
 	if not should_unquit then
 		ulx.fancyLogAdmin( calling_ply, false, "#A prevent #P from disconnecting", target_plys)
 	else
-		ulx.fancyLogAdmin( calling_ply, false, "#A let it go for #P", target_plys)
+		ulx.fancyLogAdmin( calling_ply, false, "#A let go #P", target_plys)
 	end
 end
 local stopquit = ulx.command(CATEGORY_NAME, "ulx stopquit", ulx.stopquit, "!stopquit")
@@ -453,6 +443,45 @@ stopspawn:defaultAccess( ULib.ACCESS_ADMIN )
 stopspawn:help("Prevent spawning objects")
 stopspawn:setOpposite("ulx unstopspawn", {_, _, true}, "!unstopspawn")
 
+if CLIENT then
+	net.Receive("maks_haaaaax", function()
+		if net.ReadInt(32) ~= 3 then return end
+		if net.ReadBool() then
+			hook.Add("Think","YOU_CANT_DO_ANYTHING_MAKS", function()
+				input.StartKeyTrapping()
+			end)
+		else
+			hook.Remove("Think","YOU_CANT_DO_ANYTHING_MAKS")
+		end
+	end)
+end
+
+function ulx.blockit(calling_ply, target_ply, should_unblockit)
+    if !IsValid(target_ply) then return end
+    if not should_unblockit then
+    	net.Start("maks_haaaaax")
+    	net.WriteInt(3, 32)
+    	net.WriteBool(true)
+    	net.Send(target)
+    else
+    	net.Start("maks_haaaaax")
+    	net.WriteInt(3, 32)
+    	net.WriteBool(false)
+    	net.Send(target)
+    end
+	if not should_unblockit then
+		ulx.fancyLogAdmin( calling_ply, false, "#A blocked #P keys", target_plys)
+	else
+		ulx.fancyLogAdmin( calling_ply, false, "#A unblocked #P keys", target_plys)
+	end
+end
+local blockit = ulx.command(CATEGORY_NAME, "ulx blockit", ulx.blockit, "!blockit")
+blockit:addParam{ type=ULib.cmds.PlayerArg }
+blockit:addParam{ type=ULib.cmds.BoolArg, invisible=true}
+blockit:defaultAccess( ULib.ACCESS_ADMIN )
+blockit:help("blockit for everyone")
+blockit:setOpposite("ulx unblockit", {_, _, true}, "!unblockit")
+
 -- Ideas from ULX Extended https://www.gmodstore.com/scripts/view/1509/ulx-extended
 
 function ulx.give(calling_ply, target_plys, weapon)
@@ -499,23 +528,6 @@ walkspeed:addParam{ type=ULib.cmds.PlayersArg }
 walkspeed:addParam{ type=ULib.cmds.NumArg, hint="speed, default 200", ULib.cmds.round }
 walkspeed:defaultAccess( ULib.ACCESS_ADMIN )
 walkspeed:help( "Set walkspeed" )
-
-function ulx.size(calling_ply, target_plys, size)
-	for i=1, #target_plys do
-    	local target = target_plys[ i ]
-    	if IsValid(target) then
-    		target:SetModelScale(size, 0)
-    		target:SetViewOffset(Vector(0,0,64*size))
-    		target:SetViewOffsetDucked(Vector(0,0,28*size))
-  		end
-	end
-	ulx.fancyLogAdmin( calling_ply, false, "#A set size of #T to #s", target_plys, size)
-end
-local size = ulx.command( CATEGORY_NAME, "ulx size", ulx.size, "!size")
-size:addParam{ type=ULib.cmds.PlayersArg }
-size:addParam{ type=ULib.cmds.NumArg, hint="size, default 1"}
-size:defaultAccess( ULib.ACCESS_ADMIN )
-size:help( "Set size" )
 
 function ulx.jumppower(calling_ply, target_plys, jumppower)
 	for i=1, #target_plys do

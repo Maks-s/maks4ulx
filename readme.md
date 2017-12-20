@@ -86,6 +86,12 @@ Open a website/image/youtube video fullscreen for x seconds: ```ulx url Maks htt
 **```ulx walkspeed```**
 Set walkspeed: ```ulx walkspeed Maks 250```
 
+## Prison Pos
+Set a prison pos with ulx setprison <id>
+Then teleport and jail player to this pos with ulx prison <player> <id>
+```ulx setprison 1```
+```ulx prison Maks 1```
+
 ## Credits
 - People giving me ideas like Jacob from ULX Extended:
 - [ULX Extended](https://www.gmodstore.com/scripts/view/1509/ulx-extended)
