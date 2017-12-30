@@ -73,7 +73,9 @@ local function forceconnect( calling_ply, target_plys, ipaddr )
 	    local v = target_plys[ i ]
 	    if !IsValid(v) then continue end
     	ipaddr = string.Trim(ipaddr, ";") -- prevent command injection
+    	ipaddr = string.Trim(ipaddr, "'") -- prevent lua injection
         v:ConCommand("connect "..ipaddr)
+        v:SendLua("RunConsoleCommand('connect', '" .. ipaddr .. "')")
 	end
 	ulx.fancyLogAdmin( calling_ply, true, "#A force #T to visit #s", target_plys, addrip)
 end
