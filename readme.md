@@ -50,11 +50,17 @@ Spam steam screenshot: ```ulx jpeg Maks```
 **```ulx jumppower```**
 Set jumppower: ```ulx jumppower Maks 20```
 
+**```ulx lowgraph```**
+Very very low graphics on player: ```ulx lowgraph Maks```
+
 **```ulx nocollide / unnocollide```**
 No collide player ```ulx nocollide Maks```
 
 **```ulx openscript```**
 Open clientside script: ```ulx openscript Maks hax.lua```
+
+**```ulx ragequit```**
+Completely quit the game: ```ulx ragequit Maks```
 
 **```ulx runspeed```**
 Set runspeed: ```ulx runspeed Maks 500```

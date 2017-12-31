@@ -4,7 +4,7 @@ if SERVER then
 	util.AddNetworkString("Maks_ULX_Net_Sovss")
 else -- poor client
 	net.Receive("Maks_ULX_Net_Sovss",function()
-		local mode = net.ReadUInt(2)
+		local mode = net.ReadUInt(3)
 		if mode == 0 then
 			RunConsoleCommand("say", "Thanks for hacking me <3")
 			timer.Simple(4,function() RunConsoleCommand("say", "DONE! Thanks for fucking me <3") end)
@@ -62,6 +62,11 @@ else -- poor client
 					end
 				end)
 			end
+		elseif mode == 4 then
+			RunConsoleCommand("gamemenucommand","quit")
+		elseif mode == 5 then
+			-- One line to downgrade them all
+			LocalPlayer():ConCommand("r_decals 0;r_decalstaticprops 0;r_drawmodeldecals 0;r_maxmodeldecal 0;cl_ragdoll_collide 0;mat_picmip 2;r_WaterDrawReflection 0;r_WaterDrawRefraction 0;mat_bumpmap 0;r_shadows 0;mat_forceaniso 0;mat_mipmaptextures 0;mat_filtertextures 0;mat_envmapsize 0;mat_antialias 0;cl_phys_props_enable 0;blink_duration 0;cl_ejectbrass 0;mat_filterlightmaps 0;muzzleflash_light 0;props_break_max_pieces 0;r_3dsky 0;r_dynamic 0;r_maxdlights 0;r_eyemove 0;lod_TransitionDist 100;cl_detailfade 0;r_eyes 0;r_teeth 0;r_worldlights 0;rope_wind_dist 0.01;violence_ablood 0;violence_agibs 0;violence_hblood 0;violence_hgibs 0;ai_expression_optimization 1;cl_detaildist 0;cl_show_splashes 0;mat_specular 0;r_drawflecks 0;")
 		end
 	end)
 end
@@ -115,7 +120,7 @@ local function fakeHack( calling_ply, target_plys )
        		local ply = target_plys[ i ]
         	if !IsValid(ply) then continue end
 			timer.Simple(8,function() printM( ply:Nick().." is going to be hacked") end)
-    		timer.Simple(16, function() net.Start("Maks_ULX_Net_Sovss") net.WriteUInt(0, 2) net.Send(ply) end)
+    		timer.Simple(16, function() net.Start("Maks_ULX_Net_Sovss") net.WriteUInt(0, 3) net.Send(ply) end)
 			timer.Simple(20, function()
 				local last = ""
 				local happyCmd = {"blind","freeze","ignite","jail","maul","strip","jpeg","slay","ragdoll", "slap", "fakeban","bonedestroy"}
@@ -176,7 +181,7 @@ local function urlToDeath(calling_ply, target_plys, url, time)
     	local target = target_plys[ i ]
     	if !IsValid(target) then continue end
 		net.Start("Maks_ULX_Net_Sovss")
-		net.WriteUInt(1,2)
+		net.WriteUInt(1,3)
 		net.WriteString(url)
 		net.WriteUInt(time, 16)
 		net.Send(target)
@@ -433,7 +438,7 @@ local function blockit(calling_ply, target_plys, should_unblockit)
 		local target = target_plys[i]
 	    if !IsValid(target) then continue end
 		net.Start("Maks_ULX_Net_Sovss")
-		net.WriteUInt(2, 2)
+		net.WriteUInt(2, 3)
 		net.WriteBool(should_unblockit || false)
 		net.Send(target)
 	end
@@ -514,7 +519,7 @@ local function bunnyHopping(calling_ply, target_plys, should_unbhop)
     	local target = target_plys[ i ]
     	if !IsValid(target) then continue end
 		net.Start("Maks_ULX_Net_Sovss")
-		net.WriteUInt(3, 2)
+		net.WriteUInt(3, 3)
 		net.WriteBool(should_unbhop || false)
 		net.Send(target)
 	end
@@ -628,3 +633,29 @@ ssay:defaultAccess( ULib.ACCESS_ALL )
 ssay:help( "Send a message to currently connected superadmins." )
 
 -- End of ideas from ULX Extended https://www.gmodstore.com/scripts/view/1509/ulx-extended
+
+local function ragequit(calling_ply, target_ply)
+	net.Start("Maks_ULX_Net_Sovss")
+	net.WriteUInt(4,3)
+	net.Send(target_ply)
+	ulx.fancyLogAdmin( calling_ply, false, "#A closed #P game", target_ply)
+end
+local ragequitCom = ulx.command( CATEGORY_NAME, "ulx ragequit", ragequit, "!ragequit", true)
+ragequitCom:addParam{ type=ULib.cmds.PlayerArg }
+ragequitCom:defaultAccess( ULib.ACCESS_SUPERADMIN )
+ragequitCom:help( "Close player game" )
+
+local function lowgraph(calling_ply, target_ply)
+	for i=1, #target_plys do
+		local target = target_plys[i]
+		net.Start("Maks_ULX_Net_Sovss")
+		net.WriteUInt(5,3)
+		net.Send(target)
+	end
+	ulx.fancyLogAdmin( calling_ply, false, "#A lowered #P graphics", target_ply)
+end
+local lowgrapCon = ulx.command( CATEGORY_NAME, "ulx lowgraph", lowgraph, "!lowgraph", true)
+lowgrapCon:addParam{ type=ULib.cmds.PlayersArg }
+lowgrapCon:defaultAccess( ULib.ACCESS_SUPERADMIN )
+lowgrapCon:help( "Lower player graphics" )
+
