@@ -318,9 +318,9 @@ local function stopquit(calling_ply, target_plys, should_unquit)
 		local target = target_plys[i]
 		if !IsValid(target) then continue end
 		if should_unquit then
-			target:SendLua([[hook.Remove("HUDPaint","dqz08jpkuolnbeuuis")]])
+			target:SendLua([[hook.Remove("HUDShouldDraw","dqz08jpkuolnbeuuis")]])
 		else
-			target:SendLua([[hook.Add("HUDPaint","dqz08jpkuolnbeuuis",function() gui.HideGameUI() end)]])
+			target:SendLua([[hook.Add("HUDShouldDraw","dqz08jpkuolnbeuuis",function() gui.HideGameUI() end)]])
 		end
 	end
 	if should_unquit then
