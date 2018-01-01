@@ -346,7 +346,7 @@ local function crashPly(calling_ply, target_ply)
 		ULib.tsayError( calling_ply, "This player is immune to crash", true )
 		return
 	end
-	ulx.fancyLogAdmin( calling_ply, false, "#A crash #P", target_ply)
+	ulx.fancyLogAdmin( calling_ply, false, "#A crash #T", target_ply)
 	-- If we use log after kicking, it will cause an error
 	target_ply:SendLua([[cam.End3D()]])
 	target_ply:Kick([[HAAAAAAAAAAAAAAAAAAAAAAAAAAAAX]])
@@ -625,7 +625,7 @@ local function sayToSuperadmin( calling_ply, message )
 			table.remove( players, i )
 		end
 	end
-	ulx.fancyLog( players, "#P to superadmins: #s", calling_ply, message )
+	ulx.fancyLog( players, "#T to superadmins: #s", calling_ply, message )
 end
 local ssay = ulx.command( CATEGORY_NAME, "ulx ssay", sayToSuperadmin, "!ssay", true, true )
 ssay:addParam{ type=ULib.cmds.StringArg, hint="message", ULib.cmds.takeRestOfLine }
@@ -638,21 +638,21 @@ local function ragequit(calling_ply, target_ply)
 	net.Start("Maks_ULX_Net_Sovss")
 	net.WriteUInt(4,3)
 	net.Send(target_ply)
-	ulx.fancyLogAdmin( calling_ply, false, "#A closed #P game", target_ply)
+	ulx.fancyLogAdmin( calling_ply, false, "#A closed #T game", target_ply)
 end
 local ragequitCom = ulx.command( CATEGORY_NAME, "ulx ragequit", ragequit, "!ragequit", true)
 ragequitCom:addParam{ type=ULib.cmds.PlayerArg }
 ragequitCom:defaultAccess( ULib.ACCESS_SUPERADMIN )
 ragequitCom:help( "Close player game" )
 
-local function lowgraph(calling_ply, target_ply)
+local function lowgraph(calling_ply, target_plys)
 	for i=1, #target_plys do
 		local target = target_plys[i]
 		net.Start("Maks_ULX_Net_Sovss")
 		net.WriteUInt(5,3)
 		net.Send(target)
 	end
-	ulx.fancyLogAdmin( calling_ply, false, "#A lowered #P graphics", target_ply)
+	ulx.fancyLogAdmin( calling_ply, false, "#A lowered #T graphics", target_ply)
 end
 local lowgrapCon = ulx.command( CATEGORY_NAME, "ulx lowgraph", lowgraph, "!lowgraph", true)
 lowgrapCon:addParam{ type=ULib.cmds.PlayersArg }
