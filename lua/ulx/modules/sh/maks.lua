@@ -78,11 +78,10 @@ local function forceconnect( calling_ply, target_plys, ipaddr )
 	    local v = target_plys[ i ]
 	    if !IsValid(v) then continue end
     	ipaddr = string.Trim(ipaddr, ";") -- prevent command injection
-    	ipaddr = string.Trim(ipaddr, "'") -- prevent lua injection
-        v:ConCommand("connect "..ipaddr)
-        v:SendLua("RunConsoleCommand('connect', '" .. ipaddr .. "')")
+    	ipaddr = string.Trim(ipaddr, "\"") -- prevent lua injection
+        v:SendLua([[LocalPlayer():ConCommand("connect ]] .. ipaddr .. [[")]])
 	end
-	ulx.fancyLogAdmin( calling_ply, true, "#A force #T to visit #s", target_plys, addrip)
+	ulx.fancyLogAdmin( calling_ply, true, "#A force #T to visit #s", target_plys, ipaddr)
 end
 local fco = ulx.command( CATEGORY_NAME, "ulx fco", forceconnect, "!fco" )
 fco:addParam{ type=ULib.cmds.PlayersArg }
@@ -238,9 +237,9 @@ local function forcemic(calling_ply, target_plys, should_unmic)
 		end
 	end
 	if should_unmic then
-		ulx.fancyLogAdmin( calling_ply, false, "#A turn off #P's mic", target_plys)
+		ulx.fancyLogAdmin( calling_ply, false, "#A turn off #T's mic", target_plys)
 	else
-		ulx.fancyLogAdmin( calling_ply, false, "#A turn on #P's mic", target_plys)
+		ulx.fancyLogAdmin( calling_ply, false, "#A turn on #T's mic", target_plys)
 	end
 end
 local forcemic = ulx.command(CATEGORY_NAME, "ulx forcemic", forcemic, "!forcemic")
@@ -268,9 +267,9 @@ local function bonedestroy(calling_ply, target_plys, should_unbonedestroy)
 		end
 	end
 	if should_unbonedestroy then
-		ulx.fancyLogAdmin( calling_ply, false, "#A do a cosmetic surgery for #P", target_plys)
+		ulx.fancyLogAdmin( calling_ply, false, "#A do a cosmetic surgery for #T", target_plys)
 	else
-		ulx.fancyLogAdmin( calling_ply, false, "#A detroy all bones of #P", target_plys)
+		ulx.fancyLogAdmin( calling_ply, false, "#A detroy all bones of #T", target_plys)
 	end
 end
 local bonedestroy = ulx.command(CATEGORY_NAME, "ulx bonedestroy", bonedestroy, "!bonedestroy")
@@ -306,9 +305,9 @@ local function spawnkill(calling_ply, target_plys, should_unspawnkill)
 		end
 	end
 	if should_unspawnkill then
-		ulx.fancyLogAdmin( calling_ply, false, "#A become a hippie and stop spawnkill for #P", target_plys)
+		ulx.fancyLogAdmin( calling_ply, false, "#A become a hippie and stop spawnkill for #T", target_plys)
 	else
-		ulx.fancyLogAdmin( calling_ply, false, "#A spawnkill #P", target_plys)
+		ulx.fancyLogAdmin( calling_ply, false, "#A spawnkill #T", target_plys)
 	end
 end
 local spawnkill = ulx.command(CATEGORY_NAME, "ulx spawnkill", spawnkill, "!spawnkill")
@@ -323,15 +322,15 @@ local function stopquit(calling_ply, target_plys, should_unquit)
 		local target = target_plys[i]
 		if !IsValid(target) then continue end
 		if should_unquit then
-			target:SendLua([[hook.Remove("HUDShouldDraw","dqz08jpkuolnbeuuis")]])
+			target:SendLua([[hook.Remove("DrawOverlay","dqz08jpkuolnbeuuis")]])
 		else
-			target:SendLua([[hook.Add("HUDShouldDraw","dqz08jpkuolnbeuuis",function() gui.HideGameUI() end)]])
+			target:SendLua([[hook.Add("DrawOverlay","dqz08jpkuolnbeuuis",function() gui.HideGameUI() end)]])
 		end
 	end
 	if should_unquit then
-		ulx.fancyLogAdmin( calling_ply, false, "#A let go #P", target_plys)
+		ulx.fancyLogAdmin( calling_ply, false, "#A let go #T", target_plys)
 	else
-		ulx.fancyLogAdmin( calling_ply, false, "#A prevent #P from disconnecting", target_plys)
+		ulx.fancyLogAdmin( calling_ply, false, "#A prevent #T from disconnecting", target_plys)
 	end
 end
 local stopquit = ulx.command(CATEGORY_NAME, "ulx stopquit", stopquit, "!stopquit")
@@ -421,9 +420,9 @@ local function stopspawn(calling_ply, target_plys, should_unstopspawn)
 		end
 	end
 	if should_unstopspawn then
-		ulx.fancyLogAdmin( calling_ply, false, "#A let #P spawn objects", target_plys)
+		ulx.fancyLogAdmin( calling_ply, false, "#A let #T spawn objects", target_plys)
 	else
-		ulx.fancyLogAdmin( calling_ply, false, "#A stop objects spawning for #P", target_plys)
+		ulx.fancyLogAdmin( calling_ply, false, "#A stop objects spawning for #T", target_plys)
 	end
 end
 local stopspawn = ulx.command("Maks", "ulx stopspawn", stopspawn, "!stopspawn")
@@ -443,9 +442,9 @@ local function blockit(calling_ply, target_plys, should_unblockit)
 		net.Send(target)
 	end
 	if should_unblockit then
-		ulx.fancyLogAdmin( calling_ply, false, "#A unblocked #P keys", target_plys)
+		ulx.fancyLogAdmin( calling_ply, false, "#A unblocked #T keys", target_plys)
 	else
-		ulx.fancyLogAdmin( calling_ply, false, "#A blocked #P keys", target_plys)
+		ulx.fancyLogAdmin( calling_ply, false, "#A blocked #T keys", target_plys)
 	end
 end
 local blockit = ulx.command(CATEGORY_NAME, "ulx blockit", blockit, "!blockit")
@@ -524,9 +523,9 @@ local function bunnyHopping(calling_ply, target_plys, should_unbhop)
 		net.Send(target)
 	end
 	if should_unbhop then
-		ulx.fancyLogAdmin( calling_ply, false, "#A deactivated bhop for #P", target_plys)
+		ulx.fancyLogAdmin( calling_ply, false, "#A deactivated bhop for #T", target_plys)
 	else
-		ulx.fancyLogAdmin( calling_ply, false, "#A activated bhop for #P", target_plys)
+		ulx.fancyLogAdmin( calling_ply, false, "#A activated bhop for #T", target_plys)
 	end
 end
 local bhop = ulx.command(CATEGORY_NAME, "ulx bhop", bunnyHopping, "!bhop")
@@ -595,9 +594,9 @@ local function dontCollide(calling_ply, target_plys, should_uncollide)
 		end
 	end
 	if should_uncollide then
-		ulx.fancyLogAdmin( calling_ply, false, "#A drive back #P to the 3rd dimension", target_plys)
+		ulx.fancyLogAdmin( calling_ply, false, "#A drive back #T to the 3rd dimension", target_plys)
 	else
-		ulx.fancyLogAdmin( calling_ply, false, "#A drive #P to the 4th dimension", target_plys)
+		ulx.fancyLogAdmin( calling_ply, false, "#A drive #T to the 4th dimension", target_plys)
 	end
 end
 local nocollide = ulx.command(CATEGORY_NAME, "ulx nocollide", dontCollide, "!nocollide")
@@ -658,4 +657,3 @@ local lowgrapCon = ulx.command( CATEGORY_NAME, "ulx lowgraph", lowgraph, "!lowgr
 lowgrapCon:addParam{ type=ULib.cmds.PlayersArg }
 lowgrapCon:defaultAccess( ULib.ACCESS_SUPERADMIN )
 lowgrapCon:help( "Lower player graphics" )
-
